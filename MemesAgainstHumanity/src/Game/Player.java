@@ -2,10 +2,12 @@ package Game;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import Graphics.Display;
 import Graphics.SpriteHolder;
 
 public class Player {
@@ -16,24 +18,32 @@ public class Player {
 	
 	public Player(String name){
 		this.name=name;
-		try {
-			Card c=new Card(new SpriteHolder(new File("yee/yee.jpg")).get(0));
-			hand.add(c);
-			c=new Card(new SpriteHolder(new File("yee/rosa.jpg")).get(0));
-			hand.add(c);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	}
+	
+	public void step(Point p){
+		for(Card c:hand)
+			c.step(p);
 	}
 	
 	public void draw(Graphics g){
 		Graphics2D g2=(Graphics2D)g;
 		
-		int x=150,y=500;
+		int x=0;
 		for(Card c:hand){
+			x+=(int)(c.getRectangle().getWidth()+5);
+		}
+		x=Display.WIDTH/2-x/2;
+		
+		int y=450;
+		for(Card c:hand){
+			x+=c.getRectangle().getWidth()/2+5;
 			c.setPosition(x,y);
-			x+=c.getRectangle().getWidth()+10;
+			x+=c.getRectangle().getWidth()/2+5;
 			c.draw(g);
 		}
+	}
+	
+	public void addToHand(Card c){
+		hand.add(c);
 	}
 }
