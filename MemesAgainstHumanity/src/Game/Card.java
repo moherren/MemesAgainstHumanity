@@ -14,7 +14,7 @@ public class Card {
 	public double rotation=0;
 	
 	public int x,y,z;
-	public int width=50, height=70;
+	public int width=100, height=140;
 	
 	
 	public Card(BufferedImage sprite){
