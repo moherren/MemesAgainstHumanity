@@ -21,7 +21,7 @@ public class Card {
 		this.sprite=sprite;
 		sWidth=sprite.getWidth();
 		sHeight=sprite.getHeight();
-		sRatio=sWidth/(sHeight*1.00);
+		sRatio=sHeight/(sWidth*1.00);
 	}
 	
 	public Rectangle2D getRectangle(){
@@ -37,8 +37,6 @@ public class Card {
 		g2.rotate(rotation, x, y);
 		g2.setColor(Color.WHITE);
 		g2.fillRoundRect((int)rect.getMinX(), (int)rect.getMinY(),(int) rect.getWidth(),(int) rect.getHeight(), 14, 14);
-		g2.setColor(Color.BLACK);
-		g2.drawRoundRect((int)rect.getMinX(), (int)rect.getMinY(), width, height, 14, 14);
 		
 		if(sRatio<1){
 			
@@ -51,6 +49,9 @@ public class Card {
 			int width=(int) (height/sRatio);
 			g2.drawImage(sprite, (int) (rect.getCenterX()-width/2.0), (int)rect.getCenterY()-height/2,width,height,null);
 		}
+		
+		g2.setColor(Color.BLACK);
+		g2.drawRoundRect((int)rect.getMinX(), (int)rect.getMinY(), width, height, 14, 14);
 		
 		g2.rotate(rotation, x, y);
 		

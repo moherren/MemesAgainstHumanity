@@ -19,7 +19,7 @@ public class Player {
 		try {
 			Card c=new Card(new SpriteHolder(new File("yee/yee.jpg")).get(0));
 			hand.add(c);
-			c=new Card(new SpriteHolder(new File("yee/yee.jpg")).get(0));
+			c=new Card(new SpriteHolder(new File("yee/rosa.jpg")).get(0));
 			hand.add(c);
 		} catch (IOException e) {
 			e.printStackTrace();
