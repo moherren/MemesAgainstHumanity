@@ -2,6 +2,9 @@ package Game;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,6 +15,7 @@ import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
+import Graphics.Display;
 import Graphics.SpriteHolder;
 
 public class Game {
@@ -27,6 +31,8 @@ public class Game {
 		for(int i=0;i<7;i++){
 			player.addToHand(deck.drawCard());
 		}
+		
+		template=templates.drawCard();
 		
 		discard=new CardPile();
 		
@@ -90,6 +96,7 @@ public class Game {
 	
 	public void draw(Graphics g){
 		player.draw(g);
+		drawTemplate(template,g);
 	}
 
 	public void step(Point mouse) {
@@ -101,4 +108,14 @@ public class Game {
 		player.click(mouse);
 	}
 	
+	public void drawTemplate(Card c,Graphics g){
+		Rectangle2D rect=new Rectangle(10,10,(int)(Display.frame.getWidth()*0.5-15),(int)(Display.frame.getHeight()*0.5-15));
+		BufferedImage template=c.getImage();
+		rect=Display.drawFitToRectangle(template, rect, g);
+		double percent=rect.getWidth()/(1.0*template.getWidth());
+		rect=new Rectangle2D.Double(rect.getMinX()+c.tempX*percent,rect.getMinY()+c.tempY*percent,c.tempWidth*percent,c.tempHeight*percent);
+		if(player.getSelected()!=null){
+			Display.drawFitToRectangle(player.getSelected().getImage(), rect, g);
+		}
+	}
 }

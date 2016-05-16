@@ -35,7 +35,7 @@ public class Player {
 		}
 		x=Display.WIDTH/2-x/2;
 		
-		int y=450;
+		int y=Display.frame.getHeight()-150;
 		for(Card c:hand){
 			x+=c.getRectangle().getWidth()/2+5;
 			c.setPosition(x,y);

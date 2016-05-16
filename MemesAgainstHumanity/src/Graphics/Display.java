@@ -2,11 +2,15 @@ package Graphics;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -43,7 +47,6 @@ public class Display extends JPanel implements ActionListener,MouseListener{
 		frame.addMouseListener(display);
 		display.setVisible(true);
 		frame.validate();
-		
 	}
 	
 	public Display(){
@@ -93,5 +96,32 @@ public class Display extends JPanel implements ActionListener,MouseListener{
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public static Rectangle drawFitToRectangle(BufferedImage bi,Rectangle r,Graphics g){
+		return drawFitToRectangle(bi,(Rectangle2D)r,g);
+	}
+	
+	public static Rectangle drawFitToRectangle(BufferedImage sprite,Rectangle2D rect,Graphics g){
+		Graphics2D g2=(Graphics2D)g;
+		
+		int sWidth=sprite.getWidth(),sHeight=sprite.getHeight();
+		double sRatio=sHeight/(sWidth*1.00);
+		
+		int tWidth=(int) rect.getWidth(),tHeight=(int) rect.getHeight();
+		double tRatio=tHeight/(tWidth*1.00);
+		
+		if(sRatio<tRatio){
+			int width=(int) rect.getWidth();
+			int height=(int) (rect.getWidth()/Math.pow(sRatio, -1));
+			g2.drawImage(sprite, (int)rect.getCenterX()-width/2, (int)rect.getCenterY()-height/2,width,height,null);
+			return new Rectangle((int)rect.getCenterX()-width/2, (int)rect.getCenterY()-height/2,width,height);
+		}
+		else {
+			int height=(int) rect.getHeight();
+			int width=(int) (rect.getHeight()/sRatio);
+			g2.drawImage(sprite, (int) (rect.getCenterX()-width/2.0), (int)rect.getCenterY()-height/2,width,height,null);
+			return new Rectangle((int)rect.getCenterX()-width/2, (int)rect.getCenterY()-height/2,width,height);
+		}
 	}
 }
