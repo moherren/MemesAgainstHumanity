@@ -33,7 +33,7 @@ public class Display extends JPanel implements ActionListener,MouseListener{
 		frame=new JFrame();
 		frame.setSize(WIDTH, HEIGHT);
 		frame.setVisible(true);
-		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		display=new Display();
 		
 		timer=new Timer((int) (1000/fps),display);
@@ -43,7 +43,7 @@ public class Display extends JPanel implements ActionListener,MouseListener{
 		frame.addMouseListener(display);
 		display.setVisible(true);
 		frame.validate();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 	}
 	
 	public Display(){
@@ -85,7 +85,7 @@ public class Display extends JPanel implements ActionListener,MouseListener{
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+		g.click(frame.getMousePosition());
 		
 	}
 

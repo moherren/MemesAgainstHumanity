@@ -15,6 +15,7 @@ public class Player {
 	String name="memer";
 	int id=-1;
 	int score=0;
+	Card selected=null;
 	
 	public Player(String name){
 		this.name=name;
@@ -45,5 +46,17 @@ public class Player {
 	
 	public void addToHand(Card c){
 		hand.add(c);
+	}
+	
+	public void click(Point mouse){
+		selected=null;
+		for(Card c:hand){
+			if(c.click(mouse))
+				selected=c;
+		}
+	}
+	
+	public Card getSelected(){
+		return selected;
 	}
 }

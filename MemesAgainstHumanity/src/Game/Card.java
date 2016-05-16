@@ -22,11 +22,25 @@ public class Card {
 	long timeHover=0;
 	long resizeTime=100;
 	
+	int tempX,tempY,tempWidth,tempHeight;
+	
 	public Card(BufferedImage sprite){
 		this.sprite=sprite;
 		sWidth=sprite.getWidth();
 		sHeight=sprite.getHeight();
 		sRatio=sHeight/(sWidth*1.00);
+	}
+	
+	public Card(BufferedImage sprite, int tX,int tY,int tW,int tH){
+		this.sprite=sprite;
+		sWidth=sprite.getWidth();
+		sHeight=sprite.getHeight();
+		sRatio=sHeight/(sWidth*1.00);
+		
+		this.tempX=tX;
+		this.tempY=tY;
+		this.tempWidth=tW;
+		this.tempHeight=tH;
 	}
 	
 	public void step(Point mouse){
@@ -35,7 +49,6 @@ public class Card {
 		long time=System.currentTimeMillis();
 		
 		if(hover!=curHover){
-			System.out.println("mah");
 			if(time-timeHover>resizeTime){
 				timeHover=time;
 			}
@@ -45,6 +58,17 @@ public class Card {
 			hover=curHover;
 		}
 		
+	}
+	
+	public boolean click(Point mouse){
+		Rectangle2D rect=getRectangle();
+		
+		if(rect.contains(mouse.x, mouse.y))
+			selected=true;
+		else
+			selected=false;
+		
+		return selected;
 	}
 	
 	public Rectangle2D getRectangle(){
@@ -64,7 +88,12 @@ public class Card {
 		
 		Rectangle2D rect=getRectangle();
 		g2.rotate(rotation, x, y);
-		g2.setColor(Color.WHITE);
+		
+		if(!selected)
+			g2.setColor(Color.WHITE);
+		else
+			g2.setColor(Color.BLUE);
+			
 		g2.fillRoundRect((int)rect.getMinX(), (int)rect.getMinY(),(int) rect.getWidth(),(int) rect.getHeight(), 14, 14);
 		
 		if(sRatio<1){
@@ -90,4 +119,9 @@ public class Card {
 		this.x=x;
 		this.y=y;
 	}
+	
+	public BufferedImage getImage(){
+		return sprite;
+	}
 }
+
