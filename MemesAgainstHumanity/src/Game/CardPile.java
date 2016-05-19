@@ -38,4 +38,8 @@ public class CardPile {
 		}
 		return c;
 	}
+
+	public void clear() {
+		pile.clear();
+	}
 }

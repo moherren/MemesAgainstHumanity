@@ -26,6 +26,7 @@ public class Game {
 	BufferedImage templateDisplay;
 	Card template;
 	ArrayList<Player> players=new ArrayList<Player>();
+	CardPile submittedCards=new CardPile();
 	
 	SubmitButton sb=new SubmitButton();
 	
@@ -145,6 +146,42 @@ public class Game {
 
 	public void submit() {
 		player.submit();
+	}
+	
+	public synchronized void recieveCommand(GameCommand gc){
+		switch(gc.type){
+		case GameCommand.GC_DRAW_CARD:{
+			if(gc.id==player.id)
+			for(Card c:gc.cards)
+				player.addToHand(c);
+			break;
+			}
 		
+		case GameCommand.GC_NEW_TEMPLATE:{
+			template=gc.cards[0];
+			reset(template);
+			drawTemplate(template);
+			break;
+			}
+		
+		case GameCommand.GC_SUBMIT_CARD:{
+			submittedCards.addCard(gc.cards[0]);
+			for(Player p:players){
+				if(p.id==gc.id){
+					p.isSelecting=false;
+					break;
+					}
+				}
+			break;
+			}
+		}
+	}
+
+	private void reset(Card t) {
+		player.reset(t);
+		for(Player p:players){
+			p.reset(t);
+		}
+		submittedCards.clear();
 	}
 }

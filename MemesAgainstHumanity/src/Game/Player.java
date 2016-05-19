@@ -42,7 +42,7 @@ public class Player {
 	}
 	
 	public void step(Point p){
-		for(Card c:hand.getCards())
+		for(Card c:accessHand(null,0))
 			c.step(p);
 	}
 	
@@ -51,13 +51,13 @@ public class Player {
 		
 		if(isClient){
 			int x=0;
-			for(Card c:hand.getCards()){
+			for(Card c:accessHand(null,0)){
 				x+=(int)(c.getRectangle().getWidth()+5);
 			}
 			x=Display.WIDTH/2-x/2;
 		
 			int y=Display.frame.getHeight()-150;
-			for(Card c:hand.getCards()){
+			for(Card c:accessHand(null,0)){
 				x+=c.getRectangle().getWidth()/2+5;
 				c.setPosition(x,y);
 				x+=c.getRectangle().getWidth()/2+5;
@@ -76,14 +76,14 @@ public class Player {
 	}
 	
 	public void addToHand(Card c){
-		hand.addCard(c);
 		c.setOwnerID(id);
+		accessHand(c,0);
 	}
 	
 	public void click(Point mouse){
 		if(isSelecting){
 			selected[curSelect]=null;
-			for(Card c:hand.getCards()){
+			for(Card c:accessHand(null,0)){
 				if(c.click(mouse))
 					selected[curSelect]=c;
 			}
@@ -97,7 +97,7 @@ public class Player {
 	public void submit() {
 		if(isSelecting)
 		if(selected[curSelect]!=null){
-			hand.removeCard(selected[curSelect]);
+			accessHand(selected[curSelect],1);
 			curSelect++;
 			if(curSelect==selected.length){
 				isSelecting=false;
@@ -110,5 +110,20 @@ public class Player {
 		Arrays.fill(selected,null);
 		isSelecting=true;
 		curSelect=0;
+	}
+	
+	public synchronized Card[] accessHand(Card c,int action){
+		if(c!=null){
+			if(action==0){
+				hand.addCard(c);
+			}
+			else if(action==1){
+				hand.removeCard(c);
+			}
+		}
+		else{
+			return hand.getCards();
+		}
+		return null;
 	}
 }
