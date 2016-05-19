@@ -26,4 +26,16 @@ public class CardPile {
 	public int getSize(){
 		return pile.size();
 	}
+	
+	public boolean removeCard(Card c){
+		return pile.remove(c);
+	}
+
+	public Card[] getCards() {
+		Card[] c=new Card[pile.size()];
+		for(int i=0;i<pile.size();i++){
+			c[i]=pile.get(i);
+		}
+		return c;
+	}
 }

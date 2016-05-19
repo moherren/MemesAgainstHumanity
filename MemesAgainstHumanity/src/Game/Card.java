@@ -21,8 +21,10 @@ public class Card {
 	boolean hover=false;
 	long timeHover=0;
 	long resizeTime=100;
+	int ownerID=-1;
 	
-	int tempX,tempY,tempWidth,tempHeight;
+	int[] tempX=new int[1],tempY=new int[1],tempWidth=new int[1],tempHeight=new int[1];
+	int templateSize=0;
 	
 	public Card(BufferedImage sprite){
 		this.sprite=sprite;
@@ -37,10 +39,30 @@ public class Card {
 		sHeight=sprite.getHeight();
 		sRatio=sHeight/(sWidth*1.00);
 		
-		this.tempX=tX;
-		this.tempY=tY;
-		this.tempWidth=tW;
-		this.tempHeight=tH;
+		this.tempX[0]=tX;
+		this.tempY[0]=tY;
+		this.tempWidth[0]=tW;
+		this.tempHeight[0]=tH;
+		templateSize=1;
+	}
+	
+	public Card(BufferedImage sprite, int[] sizes){
+		this.sprite=sprite;
+		sWidth=sprite.getWidth();
+		sHeight=sprite.getHeight();
+		sRatio=sHeight/(sWidth*1.00);
+		
+		templateSize=sizes.length/4;
+		tempX=new int[templateSize];
+		tempY=new int[templateSize];
+		tempWidth=new int[templateSize];
+		tempHeight=new int[templateSize];
+		for(int i=0;i<templateSize;i++){
+			tempX[i]=sizes[i*4];
+			tempY[i]=sizes[i*4+1];
+			tempWidth[i]=sizes[i*4+2];
+			tempHeight[i]=sizes[i*4+3];
+		}
 	}
 	
 	public void step(Point mouse){
@@ -122,6 +144,10 @@ public class Card {
 	
 	public BufferedImage getImage(){
 		return sprite;
+	}
+	
+	public void setOwnerID(int id){
+		ownerID=id;
 	}
 }
 

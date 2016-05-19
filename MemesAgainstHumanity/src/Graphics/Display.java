@@ -124,4 +124,23 @@ public class Display extends JPanel implements ActionListener,MouseListener{
 			return new Rectangle((int)rect.getCenterX()-width/2, (int)rect.getCenterY()-height/2,width,height);
 		}
 	}
+
+	public static Rectangle2D drawFitToRectangle(BufferedImage sprite, Rectangle2D rect) {
+		int sWidth=sprite.getWidth(),sHeight=sprite.getHeight();
+		double sRatio=sHeight/(sWidth*1.00);
+		
+		int tWidth=(int) rect.getWidth(),tHeight=(int) rect.getHeight();
+		double tRatio=tHeight/(tWidth*1.00);
+		
+		if(sRatio<tRatio){
+			int width=(int) rect.getWidth();
+			int height=(int) (rect.getWidth()/Math.pow(sRatio, -1));
+			return new Rectangle((int)rect.getCenterX()-width/2, (int)rect.getCenterY()-height/2,width,height);
+		}
+		else {
+			int height=(int) rect.getHeight();
+			int width=(int) (rect.getHeight()/sRatio);
+			return new Rectangle((int)rect.getCenterX()-width/2, (int)rect.getCenterY()-height/2,width,height);
+		}
+	}
 }

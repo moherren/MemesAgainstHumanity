@@ -1,5 +1,6 @@
 package Game;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -19,10 +20,14 @@ import Graphics.Display;
 import Graphics.SpriteHolder;
 
 public class Game {
-	Player player=new Player("bob");
+	Player player=new Player("bob",true);
 	CardPile deck,discard,templates;
 	
+	BufferedImage templateDisplay;
 	Card template;
+	ArrayList<Player> players=new ArrayList<Player>();
+	
+	SubmitButton sb=new SubmitButton();
 	
 	public Game(){
 		deck=new CardPile();
@@ -33,6 +38,9 @@ public class Game {
 		}
 		
 		template=templates.drawCard();
+		templateDisplay=drawTemplate(template);
+		
+		player.reset(template);
 		
 		discard=new CardPile();
 		
@@ -73,10 +81,10 @@ public class Game {
 				numnums.add(Integer.parseInt(split[z]));
 			}
 
-			int[] recCoords=new int[4];
+			int[] recCoords=new int[numnums.size()];
 			
 			for (int s = 0; s < numnums.size(); s++) {
-				recCoords = new int[4];
+				recCoords = new int[numnums.size()];
 				for (int f = 0; f < recCoords.length; f++) {
 					recCoords[f] = numnums.get(0);
 					numnums.remove(0);
@@ -85,7 +93,7 @@ public class Game {
 
 			}try {
 					
-					templates.addCard(new Card(ImageIO.read(new File(pathArray.get(i))),recCoords[0], recCoords[1], recCoords[2], recCoords[3]));
+					templates.addCard(new Card(ImageIO.read(new File(pathArray.get(i))),recCoords));
 				} catch (IOException e) {
 					System.out.println(pathArray.get(i));
 					e.printStackTrace();
@@ -96,7 +104,16 @@ public class Game {
 	
 	public void draw(Graphics g){
 		player.draw(g);
-		drawTemplate(template,g);
+		Rectangle rect=new Rectangle(10,10,(int)(Display.frame.getWidth()*0.5-15),(int)(Display.frame.getHeight()*0.6-15));
+		g.setColor(Color.LIGHT_GRAY);
+		g.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 10, 10);
+		g.setColor(Color.BLACK);
+		g.drawRoundRect(rect.x, rect.y, rect.width, rect.height, 10, 10);
+		Display.drawFitToRectangle(templateDisplay, rect,g);
+		player.drawStats(g, (int)(rect.getWidth()+10), 10, (int)(Display.frame.getWidth()-(rect.getWidth()+10)), 24);
+		
+		sb.setPosition((int)(rect.getWidth()+10), (int)(Display.frame.getHeight()*0.6-48), (int)(Display.frame.getWidth()-(rect.getWidth()+10)),32);
+		sb.draw(g);
 	}
 
 	public void step(Point mouse) {
@@ -105,17 +122,29 @@ public class Game {
 	}
 
 	public void click(Point mouse) {
-		player.click(mouse);
+		if(!sb.click(mouse, this)){
+			player.click(mouse);
+			templateDisplay=drawTemplate(template);
+		}
 	}
 	
-	public void drawTemplate(Card c,Graphics g){
-		Rectangle2D rect=new Rectangle(10,10,(int)(Display.frame.getWidth()*0.5-15),(int)(Display.frame.getHeight()*0.5-15));
-		BufferedImage template=c.getImage();
-		rect=Display.drawFitToRectangle(template, rect, g);
-		double percent=rect.getWidth()/(1.0*template.getWidth());
-		rect=new Rectangle2D.Double(rect.getMinX()+c.tempX*percent,rect.getMinY()+c.tempY*percent,c.tempWidth*percent,c.tempHeight*percent);
-		if(player.getSelected()!=null){
-			Display.drawFitToRectangle(player.getSelected().getImage(), rect, g);
+	public BufferedImage drawTemplate(Card c){
+		BufferedImage bi=c.getImage();
+		BufferedImage template=new BufferedImage(bi.getWidth(),bi.getHeight(),BufferedImage.TYPE_INT_ARGB_PRE);
+		Graphics g=template.createGraphics();
+		g.drawImage(bi,0,0,null);
+		for(int i=0;i<c.templateSize;i++){
+			Rectangle2D rect=new Rectangle2D.Double(c.tempX[i],c.tempY[i],c.tempWidth[i],c.tempHeight[i]);
+			
+			if(player.getSelected()[i]!=null){
+				Display.drawFitToRectangle(player.getSelected()[i].getImage(), rect,g);
+			}
 		}
+		return template;
+	}
+
+	public void submit() {
+		player.submit();
+		
 	}
 }
