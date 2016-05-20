@@ -20,7 +20,7 @@ import Graphics.Display;
 import Graphics.SpriteHolder;
 
 public class Game {
-	Player player=new Player("bob",true);
+	Player player=new Player("bob",true),judge;
 	CardPile deck,discard,templates;
 	
 	BufferedImage templateDisplay;
@@ -104,17 +104,61 @@ public class Game {
 	}
 	
 	public void draw(Graphics g){
-		player.draw(g);
+		if(showHand())
+			player.draw(g);
+		else
+			drawJudge(g);
 		Rectangle rect=new Rectangle(10,10,(int)(Display.frame.getWidth()*0.5-15),(int)(Display.frame.getHeight()*0.6-15));
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 10, 10);
 		g.setColor(Color.BLACK);
 		g.drawRoundRect(rect.x, rect.y, rect.width, rect.height, 10, 10);
-		Display.drawFitToRectangle(templateDisplay, rect,g);
+		if(showHand())
+			Display.drawFitToRectangle(templateDisplay, rect,g);
+		else if(getHoverCard()!=null)
+			Display.drawFitToRectangle(getHoverCard().getImage(), rect,g);
 		player.drawStats(g, (int)(rect.getWidth()+10), 10, (int)(Display.frame.getWidth()-(rect.getWidth()+10)), 24);
 		
 		sb.setPosition((int)(rect.getWidth()+10), (int)(Display.frame.getHeight()*0.6-48), (int)(Display.frame.getWidth()-(rect.getWidth()+10)),32);
 		sb.draw(g);
+	}
+
+	public boolean showHand(){
+		return (player.isSelecting&&!player.isJudge);
+	}
+	
+	private Card getHoverCard() {		
+		if(showHand())
+			return player.getHover();
+		else{
+			Point p=Display.frame.getMousePosition();
+			Card hover=null;
+			for(Card c:submittedCards.getCards()){
+				c.step(p);
+				if(c.hover)
+					hover=c;
+			}
+			return hover;
+		}
+	}
+
+	private void drawJudge(Graphics g) {
+		int x=0;
+		for(Card c:submittedCards.getCards()){
+			x+=(int)(c.getRectangle().getWidth()+5);
+		}
+		x=Display.WIDTH/2-x/2;
+	
+		int y=Display.frame.getHeight()-150;
+		for(Card c:submittedCards.getCards()){
+			x+=c.getRectangle().getWidth()/2+5;
+			c.setPosition(x,y);
+			x+=c.getRectangle().getWidth()/2+5;
+			if(c.ownerID==player.id)
+				c.draw(g);
+			else
+				c.drawBack(g);
+		}
 	}
 
 	public void step(Point mouse) {
@@ -145,7 +189,11 @@ public class Game {
 	}
 
 	public void submit() {
-		player.submit();
+		player.submit(this);
+	}
+	
+	public void submit(Card[] c){
+		submittedCards.addCard(new Card(drawTemplate(template)));
 	}
 	
 	public synchronized void recieveCommand(GameCommand gc){
@@ -161,6 +209,13 @@ public class Game {
 			template=gc.cards[0];
 			reset(template);
 			drawTemplate(template);
+			for(Player p:players){
+				if(p.id==gc.id){
+					judge=p;
+					p.isJudge=true;
+					p.isSelecting=false;
+					}
+				}
 			break;
 			}
 		

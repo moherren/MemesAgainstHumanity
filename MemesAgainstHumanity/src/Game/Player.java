@@ -26,14 +26,16 @@ public class Player {
 	int curSelect=0;
 	boolean isSelecting=true;
 	
+	Card hover=null;
 	BufferedImage pepe;
+	public boolean isJudge=false;
 	
 	public Player(String name,boolean isClient){
 		this.name=name;
 		this.isClient=isClient;
 		
 		try {
-			pepe= ImageIO.read(new File("pepes/pepe.jpg"));
+			pepe= ImageIO.read(new File("pepes/pepe.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -42,8 +44,12 @@ public class Player {
 	}
 	
 	public void step(Point p){
-		for(Card c:accessHand(null,0))
+		hover=null;
+		for(Card c:accessHand(null,0)){
 			c.step(p);
+			if(c.hover)
+				hover=c;
+		}
 	}
 	
 	public void draw(Graphics g){
@@ -94,13 +100,14 @@ public class Player {
 		return selected;
 	}
 
-	public void submit() {
+	public void submit(Game g) {
 		if(isSelecting)
 		if(selected[curSelect]!=null){
 			accessHand(selected[curSelect],1);
 			curSelect++;
 			if(curSelect==selected.length){
 				isSelecting=false;
+				g.submit(getSelected());
 			}
 		}
 	}
@@ -110,6 +117,7 @@ public class Player {
 		Arrays.fill(selected,null);
 		isSelecting=true;
 		curSelect=0;
+		isJudge=false;
 	}
 	
 	public synchronized Card[] accessHand(Card c,int action){
@@ -124,6 +132,11 @@ public class Player {
 		else{
 			return hand.getCards();
 		}
+		return null;
+	}
+
+	public Card getHover() {
+		
 		return null;
 	}
 }

@@ -137,6 +137,27 @@ public class Card {
 		
 	}
 	
+	public void drawBack(Graphics g){
+		Graphics2D g2=(Graphics2D)g;
+		
+		
+		Rectangle2D rect=getRectangle();
+		g2.rotate(rotation, x, y);
+		
+		if(!selected)
+			g2.setColor(Color.WHITE);
+		else
+			g2.setColor(Color.BLUE);
+			
+		g2.fillRoundRect((int)rect.getMinX(), (int)rect.getMinY(),(int) rect.getWidth(),(int) rect.getHeight(), 14, 14);
+		
+		g2.setColor(Color.BLACK);
+		g2.drawRoundRect((int)rect.getMinX(), (int)rect.getMinY(), (int)rect.getWidth(), (int)rect.getHeight(), 14, 14);
+		
+		g2.rotate(rotation, x, y);
+		
+	}
+	
 	public void setPosition(int x,int y){
 		this.x=x;
 		this.y=y;
