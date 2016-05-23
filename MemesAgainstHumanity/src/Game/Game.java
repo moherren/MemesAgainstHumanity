@@ -24,7 +24,7 @@ import Graphics.Display;
 import Graphics.SpriteHolder;
 
 public class Game {
-	Player player=new Player("bob",true),judge;
+	Player player=new Player("bob",true,0),judge;
 	
 	public static final int port=4998;
 	
@@ -49,11 +49,6 @@ public class Game {
 			GameCommand com=(GameCommand)in.readObject();
 			player=new Player(com);
 			sendState(com);
-			boolean isHost=false;
-			if(InetAddress.getLocalHost()==InetAddress.getByName(host))
-				isHost=true;
-			player=new Player(userName,isHost,com.id);
-			sendState(GameCommand.introducePlayer(player.id, userName));
 			boolean isHost=false;
 			if(InetAddress.getLocalHost()==InetAddress.getByName(host))
 				isHost=true;
