@@ -19,6 +19,8 @@ import java.util.Enumeration;
 
 import javax.swing.*;
 
+import Graphics.Display;
+
 @SuppressWarnings("serial")
 public class JoinPanel extends JPanel implements ActionListener{
 
@@ -129,7 +131,7 @@ public class JoinPanel extends JPanel implements ActionListener{
 					oos=new ObjectOutputStream(soc.getOutputStream());
 					oos.writeObject(userName.getText());
 					//start a thread that will listen for a response
-					new ResponseThread().start();
+					new ResponseThread(server).start();
 				}catch(IOException | ClassNotFoundException e1){
 					e1.printStackTrace();
 				}
@@ -137,9 +139,10 @@ public class JoinPanel extends JPanel implements ActionListener{
 		}
 	}
 	
-	public void startGame(){
+	public void startGame(String host){
 		//set up the game
 		frame.dispose();
+		new Display(host);
 	}
 	
 	public ArrayList<String[]> discoverHosts(){
@@ -200,6 +203,12 @@ public class JoinPanel extends JPanel implements ActionListener{
 	
 	
 	private class ResponseThread extends Thread{
+		
+		String[] server;
+		
+		public ResponseThread(String[] server){
+			this.server=server;
+		}
 		public void run(){
 			try{
 				if((Boolean)(ois.readObject())==true){
@@ -212,7 +221,7 @@ public class JoinPanel extends JPanel implements ActionListener{
 							Object w=ois.readObject();
 							if(w!=null){
 								end=true;
-								startGame();
+								startGame(server[2]);
 							}
 						} catch (IOException | ClassNotFoundException e) {
 							e.printStackTrace();

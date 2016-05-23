@@ -47,8 +47,13 @@ public class Game {
 			out.flush();
 			in= new ObjectInputStream(socket.getInputStream());
 			GameCommand com=(GameCommand)in.readObject();
-			play=new Player(com);
+			player=new Player(com);
 			sendState(com);
+			boolean isHost=false;
+			if(InetAddress.getLocalHost()==InetAddress.getByName(host))
+				isHost=true;
+			player=new Player(userName,isHost,com.id);
+			sendState(GameCommand.introducePlayer(player.id, userName));
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -57,6 +62,10 @@ public class Game {
 		
 	}
 	
+	private void sendState(GameCommand com) throws IOException {
+		out.writeObject(com);
+	}
+
 	public void draw(Graphics g){
 		if(showHand())
 			player.draw(g);
@@ -196,7 +205,7 @@ public class Game {
 
 	public void recieveState() throws ClassNotFoundException, IOException {
 		GameCommand gs=(GameCommand) in.readObject();
+		recieveCommand(gs);
 		
-		if
 	}
 }

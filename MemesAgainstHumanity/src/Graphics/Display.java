@@ -31,15 +31,20 @@ public class Display extends JPanel implements ActionListener,MouseListener{
 	public static Display display;
 	static Timer timer;
 	
-	Game g=new Game();
+	Game g;
 	
 	public static void main(String[] args){
+		
+	}
+	
+	public Display(String server){
 		frame=new JFrame();
 		frame.setSize(WIDTH, HEIGHT);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		display=new Display();
+		display=this;
 		
+		g=new Game(server);
 		timer=new Timer((int) (1000/fps),display);
 		timer.start();
 		
@@ -47,10 +52,6 @@ public class Display extends JPanel implements ActionListener,MouseListener{
 		frame.addMouseListener(display);
 		display.setVisible(true);
 		frame.validate();
-	}
-	
-	public Display(){
-
 	}
 
 	public void actionPerformed(ActionEvent arg0) {

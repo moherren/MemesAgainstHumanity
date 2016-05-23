@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import Graphics.Display;
 import networking.GameServer;
 
 public class HostPanel extends JPanel implements ActionListener{
@@ -97,8 +98,10 @@ public class HostPanel extends JPanel implements ActionListener{
 		gameCreated=true;
 	}
 	
-	public void startGame(){
-//		server.startGame();
+	public void startGame(String host){
+		//set up the game
+		frame.dispose();
+		new Display(host);
 	}
 	
 	public boolean connectPlayer(String playerName){

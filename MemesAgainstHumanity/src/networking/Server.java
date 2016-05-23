@@ -40,7 +40,7 @@ public class Server extends Thread{
 	
 	
 	public static void main(String[] args) throws IOException {
-		int port = /* Integer.parseInt(args[0]) */4999;
+		int port = /* Integer.parseInt(args[0]) */4998;
 		System.out.println("New server started");
 		new Server(port,"George","Michaels",false);
 	}
