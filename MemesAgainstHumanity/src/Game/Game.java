@@ -76,7 +76,7 @@ public class Game {
 		g.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 10, 10);
 		g.setColor(Color.BLACK);
 		g.drawRoundRect(rect.x, rect.y, rect.width, rect.height, 10, 10);
-		if(showHand())
+		if(showHand()&&templateDisplay!=null)
 			Display.drawFitToRectangle(templateDisplay, rect,g);
 		else if(getHoverCard()!=null)
 			Display.drawFitToRectangle(getHoverCard().getImage(), rect,g);
