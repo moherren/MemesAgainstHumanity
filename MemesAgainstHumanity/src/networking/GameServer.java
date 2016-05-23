@@ -94,7 +94,11 @@ public class GameServer extends Thread {
 	}
 	
 	public void startGame(){
-		
+		try {
+			oos.writeObject(new Boolean(false));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public String getAddress(){
