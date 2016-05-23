@@ -8,6 +8,9 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -88,6 +91,7 @@ public class HostPanel extends JPanel implements ActionListener{
 				frame.dispose();
 				server.startGame();
 				System.out.println("halmflksmdlfkmsdlkfmsdklfmdsklmf");
+				startGame();
 			}
 		}
 	}
@@ -98,10 +102,15 @@ public class HostPanel extends JPanel implements ActionListener{
 		gameCreated=true;
 	}
 	
-	public void startGame(String host){
+	public void startGame(){
 		//set up the game
 		frame.dispose();
-		new Display(host);
+		try {
+			new Display(InetAddress.getLocalHost().getHostName());
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		gameCreated=true;
 	}
 	
 	public boolean connectPlayer(String playerName){
