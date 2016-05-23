@@ -32,7 +32,6 @@ public class Server extends Thread{
 	ServerThread thread;
 	int num=0;
 	GameCommand[] ids=new GameCommand[]{null,null,null,null};
-	public static int[] colors=new int[]{0xff0000,0xFFA500,0x3B3BFF,0xffff00};
 	
 	CardPile deck,discard,templates;
 	Card template=null;
@@ -202,11 +201,6 @@ public class Server extends Thread{
 		return ids.length;
 	}
 	
-	public int getColor(int id){
-		if(id<colors.length)
-			return colors[id];
-		return 0xffffff;
-	}
 	public void newTemplate(){
 			template=templates.drawCard();
 			GameCommand gm=GameCommand.createTemplate(template,jID);

@@ -9,6 +9,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,14 +26,34 @@ import Graphics.SpriteHolder;
 public class Game {
 	Player player=new Player("bob",true),judge;
 	
+	public static final int port=4998;
+	
 	BufferedImage templateDisplay;
 	Card template;
 	ArrayList<Player> players=new ArrayList<Player>();
 	CardPile submittedCards=new CardPile();
 	
 	SubmitButton sb=new SubmitButton();
+
+	Socket socket;
+	ObjectInputStream in;
+	ObjectOutputStream out;
 	
-	public Game(){
+	public Game(String host){
+		
+		try {
+			socket=new Socket(InetAddress.getByName(host),port);
+			out=new ObjectOutputStream(socket.getOutputStream());
+			out.flush();
+			in= new ObjectInputStream(socket.getInputStream());
+			GameCommand com=(GameCommand)in.readObject();
+			play=new Player(com);
+			sendState(com);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -168,5 +192,11 @@ public class Game {
 			p.reset(t);
 		}
 		submittedCards.clear();
+	}
+
+	public void recieveState() throws ClassNotFoundException, IOException {
+		GameCommand gs=(GameCommand) in.readObject();
+		
+		if
 	}
 }

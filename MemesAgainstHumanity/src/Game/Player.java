@@ -30,6 +30,10 @@ public class Player {
 	BufferedImage pepe;
 	public boolean isJudge=false;
 	
+	public Player(GameCommand gc){
+		
+	}
+	
 	public Player(String name,boolean isClient){
 		this.name=name;
 		this.isClient=isClient;
