@@ -34,7 +34,7 @@ public class Player {
 		
 	}
 	
-	public Player(String name,boolean isClient){
+	public Player(String name,boolean isClient,int id){
 		this.name=name;
 		this.isClient=isClient;
 		

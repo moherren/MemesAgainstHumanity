@@ -39,7 +39,7 @@ public class Game {
 	ObjectInputStream in;
 	ObjectOutputStream out;
 	
-	public Game(String host){
+	public Game(String host,String userName){
 		
 		try {
 			socket=new Socket(InetAddress.getByName(host),port);
@@ -49,6 +49,11 @@ public class Game {
 			GameCommand com=(GameCommand)in.readObject();
 			player=new Player(com);
 			sendState(com);
+			boolean isHost=false;
+			if(InetAddress.getLocalHost()==InetAddress.getByName(host))
+				isHost=true;
+			player=new Player(userName,isHost,com.id);
+			sendState(GameCommand.introducePlayer(player.id, userName));
 			boolean isHost=false;
 			if(InetAddress.getLocalHost()==InetAddress.getByName(host))
 				isHost=true;

@@ -44,7 +44,7 @@ public class Display extends JPanel implements ActionListener,MouseListener{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		display=this;
 		
-		g=new Game(server);
+		g=new Game(server,"bill");
 		timer=new Timer((int) (1000/fps),display);
 		timer.start();
 		
