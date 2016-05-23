@@ -14,7 +14,7 @@ public class SetUp extends JFrame{
 	private JPanel panel;
 	
 	public SetUp(){
-		super("Triad Set Up");
+		super("Memes Against Humanity Set Up");
 		setBackground(Color.WHITE);
 //		setPreferredSize(new Dimension(500,500));
 		setFocusable(true);

@@ -21,7 +21,6 @@ import Graphics.SpriteHolder;
 
 public class Game {
 	Player player=new Player("bob",true),judge;
-	CardPile deck,discard,templates;
 	
 	BufferedImage templateDisplay;
 	Card template;
@@ -31,76 +30,7 @@ public class Game {
 	SubmitButton sb=new SubmitButton();
 	
 	public Game(){
-		deck=new CardPile();
-		templates=new CardPile();
-		loadDeck();
-		for(int i=0;i<7;i++){
-			player.addToHand(deck.drawCard());
-		}
 		
-		template=templates.drawCard();
-		templateDisplay=drawTemplate(template);
-		
-		player.reset(template);
-		
-		discard=new CardPile();
-		
-	}
-	
-	public void loadDeck(){
-		File sourcePath = new File("sourceImages");
-		File[] sourceFiles = sourcePath.listFiles();
-		for (File i : sourceFiles) {
-			try {
-				deck.addCard(new Card(new SpriteHolder(i).get(0)));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		deck.shuffle();
-		
-		ArrayList<String> pathArray = new ArrayList<String>();
-		
-		Scanner scan;
-		try {
-			File f = new File("TemplatesText");
-			scan = new Scanner(f);
-			while (scan.hasNextLine()) {
-				pathArray.add(scan.nextLine());
-			}
-		} catch (FileNotFoundException e) {
-			System.out.println(e);
-		}
-		
-		for (int i = 0; i < pathArray.size(); i++) {
-			ArrayList<Integer> numnums = new ArrayList<Integer>();
-
-			String[] split = pathArray.get(i).split("~");
-			pathArray.set(i, split[0]);
-			pathArray.set(i, pathArray.get(i).trim());
-			for (int z = 1; z < split.length; z++) {
-				numnums.add(Integer.parseInt(split[z]));
-			}
-
-			int[] recCoords=new int[numnums.size()];
-			
-			for (int s = 0; s < numnums.size(); s++) {
-				recCoords = new int[numnums.size()];
-				for (int f = 0; f < recCoords.length; f++) {
-					recCoords[f] = numnums.get(0);
-					numnums.remove(0);
-				}
-				
-
-			}try {
-					
-					templates.addCard(new Card(ImageIO.read(new File(pathArray.get(i))),recCoords));
-				} catch (IOException e) {
-					System.out.println(pathArray.get(i));
-					e.printStackTrace();
-				}
-		}
-		templates.shuffle();
 	}
 	
 	public void draw(Graphics g){
