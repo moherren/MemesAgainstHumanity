@@ -12,7 +12,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-public class GameServer extends Thread {
+public class Lobby extends Thread {
 
 	private int port;
 	private ServerSocket server;
@@ -24,7 +24,7 @@ public class GameServer extends Thread {
 	private String address;
 	private DiscoveryThread connector;
 
-	public GameServer(HostPanel host, int port){
+	public Lobby(HostPanel host, int port){
 		this.host = host;
 		this.port = port;
 		try {
@@ -39,7 +39,7 @@ public class GameServer extends Thread {
 	}
 
 	public void run(){
-		Socket soc=null;
+		soc=null;
 		connected=false;
 		while(!connected){
 			try{
@@ -96,6 +96,7 @@ public class GameServer extends Thread {
 	public void startGame(){
 		try {
 			oos.writeObject(new Boolean(false));
+			soc.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

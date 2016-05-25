@@ -21,7 +21,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import Graphics.Display;
-import networking.GameServer;
+import networking.Lobby;
 
 public class HostPanel extends JPanel implements ActionListener{
 
@@ -35,7 +35,7 @@ public class HostPanel extends JPanel implements ActionListener{
 	
 	public static final int port=2000;
 	
-	GameServer server;
+	Lobby server;
 	
 	boolean gameCreated;
 	boolean joined;
@@ -97,7 +97,7 @@ public class HostPanel extends JPanel implements ActionListener{
 	}
 	
 	public void createGame(){
-		server=new GameServer(this,port);
+		server=new Lobby(this,port);
 		server.start();
 		gameCreated=true;
 	}
