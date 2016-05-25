@@ -142,6 +142,12 @@ public class JoinPanel extends JPanel implements ActionListener{
 	public void startGame(String host){
 		//set up the game
 		frame.dispose();
+		try {
+			soc.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		new Display(host);
 	}
 	
