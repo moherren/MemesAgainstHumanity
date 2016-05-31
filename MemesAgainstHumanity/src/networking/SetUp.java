@@ -16,7 +16,7 @@ public class SetUp extends JFrame{
 	public SetUp(){
 		super("Memes Against Humanity Set Up");
 		setBackground(Color.WHITE);
-//		setPreferredSize(new Dimension(500,500));
+		setPreferredSize(new Dimension(500,500));
 		setFocusable(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		panel=new ChoosePanel(this);

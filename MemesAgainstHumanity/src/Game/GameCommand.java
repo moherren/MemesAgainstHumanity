@@ -11,6 +11,7 @@ public class GameCommand implements Serializable{
 	
 	public String name;
 	public int type,id;
+	public boolean isJudge;
 	public Card[] cards;
 	
 	private GameCommand(){
@@ -64,4 +65,13 @@ public class GameCommand implements Serializable{
 		return gc;
 	}
 	
+	public static GameCommand submitCard(Card drawCard, boolean b){
+		GameCommand gc=new GameCommand();
+		
+		gc.cards=new Card[]{drawCard};
+		gc.type=GameCommand.GC_SUBMIT_CARD;
+		gc.isJudge=b;
+		
+		return gc;
+	}
 }

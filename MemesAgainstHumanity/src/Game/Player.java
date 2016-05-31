@@ -31,7 +31,8 @@ public class Player {
 	public boolean isJudge=false;
 	
 	public Player(GameCommand gc){
-		
+		name=gc.name;
+		id=gc.id;
 	}
 	
 	public Player(String name,boolean isClient,int id){

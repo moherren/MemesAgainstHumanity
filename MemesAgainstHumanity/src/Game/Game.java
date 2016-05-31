@@ -62,8 +62,12 @@ public class Game {
 		
 	}
 	
-	private void sendState(GameCommand com) throws IOException {
-		out.writeObject(com);
+	private void sendState(GameCommand com) {
+		try {
+			out.writeObject(com);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void draw(Graphics g){
@@ -81,6 +85,12 @@ public class Game {
 		else if(getHoverCard()!=null)
 			Display.drawFitToRectangle(getHoverCard().getImage(), rect,g);
 		player.drawStats(g, (int)(rect.getWidth()+10), 10, (int)(Display.frame.getWidth()-(rect.getWidth()+10)), 24);
+		
+		int dy=1;
+		for(Player p:getPlayers()){
+			player.drawStats(g, (int)(rect.getWidth()+10), 10+dy*12, (int)(Display.frame.getWidth()-(rect.getWidth()+10)), 24);
+			dy++;
+		}
 		
 		sb.setPosition((int)(rect.getWidth()+10), (int)(Display.frame.getHeight()*0.6-48), (int)(Display.frame.getWidth()-(rect.getWidth()+10)),32);
 		sb.draw(g);
@@ -156,7 +166,13 @@ public class Game {
 	}
 	
 	public void submit(Card[] c){
-		submittedCards.addCard(new Card(drawTemplate(template)));
+		player.isSelecting=false;
+		if(showHand()){
+			sendState(GameCommand.submitCard(new Card(drawTemplate(template)),false));
+		}
+		else if(player.isJudge){
+			sendState(GameCommand.submitCard(new Card(drawTemplate(template)),true));
+		}
 	}
 	
 	public synchronized void recieveCommand(GameCommand gc){
@@ -172,7 +188,7 @@ public class Game {
 			template=gc.cards[0];
 			reset(template);
 			drawTemplate(template);
-			for(Player p:players){
+			for(Player p:getPlayers()){
 				if(p.id==gc.id){
 					judge=p;
 					p.isJudge=true;
@@ -184,15 +200,55 @@ public class Game {
 		
 		case GameCommand.GC_SUBMIT_CARD:{
 			submittedCards.addCard(gc.cards[0]);
-			for(Player p:players){
+			for(Player p:getPlayers()){
 				if(p.id==gc.id){
 					p.isSelecting=false;
+					}
+				}
+			break;
+			}
+		case GameCommand.GC_INTRODUCE_PLAYER:{
+			Player p=new Player(gc);
+			addPlayer(p);
+			break;
+			}
+		case GameCommand.GC_REMOVE_PLAYER:{
+			for(Player p:getPlayers()){
+				if(p.id==gc.id){
+					removePlayer(p);
 					break;
 					}
 				}
 			break;
 			}
 		}
+	}
+	
+	private void addPlayer(Player p){
+		alterPlayers(p,0);
+	}
+	
+	private void removePlayer(Player p){
+		alterPlayers(p,1);
+	}
+	
+	private ArrayList<Player> getPlayers(){
+		return alterPlayers(null,2);
+	}
+	
+	public synchronized ArrayList<Player> alterPlayers(Player p,int action){
+		
+		switch(action){
+			case 0:{
+				players.add(p);
+				break;
+			}
+			case 1:{
+				players.remove(p);
+				break;
+			}
+		}
+		return (ArrayList<Player>) players.clone();
 	}
 
 	private void reset(Card t) {

@@ -40,7 +40,7 @@ public class Server extends Thread{
 	
 	
 	public static void main(String[] args) throws IOException {
-		int port = /* Integer.parseInt(args[0]) */4998;
+		int port = 4998;
 		System.out.println("New server started");
 		new Server(port,"George","Michaels",false);
 	}
@@ -146,6 +146,26 @@ public class Server extends Thread{
 			}
 		}
 	}
+	
+	public synchronized void dealCardsToAll(int exception) throws IOException{
+		if(true){
+			HashMap<Socket,ObjectOutputStream> map=changeMap(null,0);
+			ObjectOutputStream[] col=new ObjectOutputStream[map.size()];
+			map.values().toArray(col);
+			for(int i=0;i<col.length;i++){
+				if(i==exception)
+					continue;
+				GameCommand gc=GameCommand.drawCard(deck.drawCard());
+				try {	
+					col[i].writeObject(gc);
+					col[i].flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+					deck.addCard(gc.cards[0]);
+					}
+				}
+			}
+	}
 
 	public void removeConnection(ServerThread st){
 		
@@ -199,6 +219,10 @@ public class Server extends Thread{
 			}
 		}
 		return ids.length;
+	}
+	
+	public void nextJudge(){
+
 	}
 	
 	public void newTemplate(){
